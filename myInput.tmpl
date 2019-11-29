@@ -1,6 +1,8 @@
 logLevel = "{{.logLevel}}"
+
 {{$l := len .defaultEntryPoints}}
-defaultEntryPoints = [{{range $i, $v := .defaultEntryPoints}} {{if ne (add $i 1) $l}} "{{$v}}" , {{else}}"{{$v}}" {{end}}{{ end }}]
+
+defaultEntryPoints = [{{range $i, $v := .defaultEntryPoints}} {{if ne (add $i 1) $l}} "{{$v}}" , {{else}}"{{$v}}" {{end}}{{end}}]
 
 [entryPoints]
   [entryPoints.http]
