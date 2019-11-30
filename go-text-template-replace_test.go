@@ -4,7 +4,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"reflect"
 	"testing"
 )
 
@@ -74,7 +73,7 @@ func TestReadInputFile(t *testing.T) {
 	}
 }
 
-func TestTokenReplace(t *testing.T) {
+func TestTemplateReplace(t *testing.T) {
 
 	//define test files for this test
 
@@ -82,42 +81,5 @@ func TestTokenReplace(t *testing.T) {
 	var TokenFileName = "testdata/testTokens.toml"
 	var ConfigFileName = "testdata/testOutput.cfg"
 
-	testTextTemplate, err := readTMPL(TemplateFileName)
-
-	if err != nil {
-		t.Errorf("Could not create template file %s\n", TemplateFileName)
-	}
-
-	testTokenMap, err := readTOML(TokenFileName)
-
-	if err != nil {
-		t.Errorf("Could not create token file %s\n ", TokenFileName)
-	}
-
-	outputFile, err := os.Create(ConfigFileName)
-
-	if err != nil {
-		t.Errorf("Could not create output file %s\n: ", ConfigFileName)
-	}
-
-	defer outputFile.Close()
-
-	err = testTextTemplate.Execute(outputFile, testTokenMap)
-
-	if err != nil {
-		t.Errorf("Could not execute template %v: ", testTextTemplate.Name())
-	}
-
-	outputTokenMap, err := readTOML(ConfigFileName)
-
-	if err != nil {
-		t.Errorf("Could not read output file %s: ", ConfigFileName)
-	}
-
-	if !reflect.DeepEqual(testTokenMap, outputTokenMap) {
-		t.Errorf("Text/template replace of template in %s with tokens in %s failed",
-			TemplateFileName,
-			TokenFileName,
-		)
-	}
+	templateReplace(TemplateFileName, TokenFileName, ConfigFileName)
 }

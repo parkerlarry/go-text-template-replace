@@ -11,12 +11,6 @@ import (
 	"github.com/pelletier/go-toml"
 )
 
-var (
-	templateFileName = flag.String("f", "testdata/testTemplate.tmpl", " -f <input file>")
-	tokenFileName    = flag.String("i", "testdata/testTokens.toml", "-i <input token file>")
-	configFileName   = flag.String("c", "testdata/testOutput.cfg", "-c <output file>")
-)
-
 func readTMPL(fileName string) (*template.Template, error) {
 	//readTMPL parses the the TMPL file, and returns the text/template object
 
@@ -46,15 +40,13 @@ func readTOML(fileName string) (map[string]interface{}, error) {
 	return tomlTree.ToMap(), err
 }
 
-func main() {
+func templateReplace(f string, i string, c string) {
 
-	flag.Parse()
+	textTemplate, _ := readTMPL(f)
 
-	textTemplate, _ := readTMPL(*templateFileName)
+	tokenMap, _ := readTOML(i)
 
-	tokenMap, _ := readTOML(*tokenFileName)
-
-	outputFile, err := os.Create(*configFileName)
+	outputFile, err := os.Create(c)
 
 	if err != nil {
 		log.Fatal(err)
@@ -68,7 +60,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	outputTokenMap, err := readTOML(*configFileName)
+	outputTokenMap, err := readTOML(c)
 
 	if err != nil {
 		log.Fatal(err)
@@ -76,9 +68,23 @@ func main() {
 
 	if !reflect.DeepEqual(tokenMap, outputTokenMap) {
 		log.Fatalf("Text/template replace of template in %s with tokens in %s failed",
-			*templateFileName,
-			*tokenFileName,
+			f,
+			i,
 		)
 	}
+
+}
+
+func main() {
+
+	var (
+		templateFileName = flag.String("f", "testdata/testTemplate.tmpl", " -f <input file>")
+		tokenFileName    = flag.String("i", "testdata/testTokens.toml", "-i <input token file>")
+		configFileName   = flag.String("c", "testdata/testOutput.cfg", "-c <output file>")
+	)
+
+	flag.Parse()
+
+	templateReplace(*templateFileName, *tokenFileName, *configFileName)
 
 }
