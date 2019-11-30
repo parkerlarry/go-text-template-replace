@@ -11,6 +11,9 @@ func defineAdd() template.FuncMap {
 		"add": func(x int, y int) int {
 			return x + y
 		},
+		"add64": func(x int64, y int64) int64 {
+			return x + y
+		},
 	}
 	return funcMap
 }

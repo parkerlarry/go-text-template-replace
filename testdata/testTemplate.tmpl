@@ -1,0 +1,16 @@
+logLevel = "{{.logLevel}}" {{$l := len .defaultEntryPoints}}
+
+defaultEntryPoints = [{{range $i, $v := .defaultEntryPoints}} {{if ne (add $i 1) $l}} "{{$v}}" , {{else}}"{{$v}}" {{end}}{{end}}]
+
+[entryPoints]
+  [entryPoints.http]
+  address = "{{.entryPoints.http.address}}"
+
+    [entryPoints.http.redirect]
+    entryPoint = "{{.entryPoints.http.redirect.entryPoint}}"
+
+  [entryPoints.https]
+  address = "{{.entryPoints.https.address}}"
+
+  [entryPoints.ssh]
+  address = "{{.entryPoints.ssh.address}}"

@@ -1,0 +1,9 @@
+[testAdd64TwoIntegers]
+  x = 10
+  y = 20
+  sum = 30
+
+[testAddTwoIntegers]
+  x = 9999
+  y = 9999
+  sum = 0
