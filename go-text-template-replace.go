@@ -67,10 +67,7 @@ func templateReplace(f string, i string, c string) {
 	}
 
 	if !reflect.DeepEqual(tokenMap, outputTokenMap) {
-		log.Fatalf("Text/template replace of template in %s with tokens in %s failed",
-			f,
-			i,
-		)
+		log.Fatalf("Replacement of %s with tokens in %s failed", f, i)
 	}
 
 }
