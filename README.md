@@ -1,5 +1,12 @@
 # go-text-template-replace
 A small project in GoLang for replacing placeholders in a .tmpl file with tokens in .toml file
 
-Run:
- ./myApp -f <inputFile.tmpl> -i <inputTokenFile.toml> -c <outputFile.cfg>
+go build -a
+
+go install go-text-template-replace
+
+go test go-text-template-replace
+
+go test -memprofile mem.out
+
+install graph viz
