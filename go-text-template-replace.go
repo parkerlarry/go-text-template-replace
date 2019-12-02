@@ -79,7 +79,7 @@ func templateReplace(f string, i string, c string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//TODO: cut line 62 to 74 and paste in a self contained function
+	//TODO: cut line 69 to 81 and paste in a self contained function
 	outputTokenMap, err := readTOML(c)
 
 	if err != nil {
