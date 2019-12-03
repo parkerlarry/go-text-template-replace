@@ -40,51 +40,55 @@ func readTOML(fileName string) (map[string]interface{}, error) {
 	return tomlTree.ToMap(), err
 }
 
+func writeCFG(
+	fileName string,
+	textTemplate *template.Template,
+	tokenMap map[string]interface{}) error {
+
+	cfgFile, err := os.Create(fileName)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer cfgFile.Close()
+
+	err = textTemplate.Execute(cfgFile, tokenMap)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return err
+}
+
 func templateReplace(f string, i string, c string) {
 	//templateReplace:
 	/*Synopsis:
-		input: -f: file name of a text template with .tmpl extensions
-			-i: input file with tokens to replace in template with .toml extension
-		output: -c: a configuration file with the output of the text replace with .cfg extension
-		
+	input:	-f: file name of a text template with .tmpl extensions
+					-i: input file with tokens to replace in template with .toml extension
+	output: -c: a configuration file with the output of the text replace with .cfg extension
+
 		readTMPL opens the template file and parses it as a tree, and returns a text/template object.
 		I call the return value textTemplate.
-		
+
 		readTOML opens the token file and parses it as a tree. After that the tree is converted into a map
 		containing key and value pairs of the tokens and their values. I call the return value tokenMap.
-		
+
 		To replace the text template with values in tokenMap,
 		textTemplaet is executed with tokenMap, and the output is stored in outputFile.
-		
+
 		To assert whether the text replace was successful, outputFile is opened with readTOML, which returns a map
 		I call outputTokenMap. If the text replace is sucessful outputMap and tokenMap should have the same contents.
-		
-		
 	*/
 
 	textTemplate, _ := readTMPL(f)
 
 	tokenMap, _ := readTOML(i)
 
-	outputFile, err := os.Create(c)
+	writeCFG(c, textTemplate, tokenMap)
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer outputFile.Close()
-	
-	err = textTemplate.Execute(outputFile, tokenMap)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	//TODO: cut line 69 to 81 and paste in a self contained function
-	outputTokenMap, err := readTOML(c)
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	outputTokenMap, _ := readTOML(c)
 
 	if !reflect.DeepEqual(tokenMap, outputTokenMap) {
 		log.Fatalf("Replacement of %s with tokens in %s failed", f, i)
@@ -95,9 +99,9 @@ func templateReplace(f string, i string, c string) {
 func main() {
 
 	var (
-		templateFileName = flag.String("f", "testdata/testTemplate.tmpl", " -f <input file>")
+		templateFileName = flag.String("f", "testdata/testTemplate.tmpl", " -f <input template file>")
 		tokenFileName    = flag.String("i", "testdata/testTokens.toml", "-i <input token file>")
-		configFileName   = flag.String("c", "testdata/testOutput.cfg", "-c <output file>")
+		configFileName   = flag.String("c", "testdata/testOutput.cfg", "-c <output config file>")
 	)
 
 	flag.Parse()
